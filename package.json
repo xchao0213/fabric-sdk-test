@@ -1,0 +1,28 @@
+{
+  "name": "fabric-sdk-demos",
+  "version": "1.0.0",
+  "description": "Hyperledger Fabric SDK for node.js demos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xchao0213/fabric-sdk-demos.git"
+  },
+  "keywords": [
+    "fabric",
+    "sdk",
+    "node.js"
+  ],
+  "author": "Alberto <xchao0213@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xchao0213/fabric-sdk-demos/issues"
+  },
+  "homepage": "https://github.com/xchao0213/fabric-sdk-demos#readme",
+  "devDependencies": {
+    "fabric-ca-client": "^1.1.0-preview",
+    "fabric-client": "^1.1.0-preview"
+  }
+}
