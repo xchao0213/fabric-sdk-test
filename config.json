@@ -1,6 +1,6 @@
 {
     "server": "47.254.24.36",
     "peerPort": ":7051",
-    "orderer": ":7050",
+    "ordererPort": ":7050",
     "caPort": ":7054"
 }

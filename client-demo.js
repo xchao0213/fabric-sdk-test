@@ -12,9 +12,12 @@ let client = new hfc();
 let channel = client.newChannel('composerchannel');
 let peer = client.newPeer('grpc://' + config.server + config.peerPort);
 channel.addPeer(peer);
+let orderer = client.newOrderer('grpc://' + config.server + config.ordererPort);
+channel.addOrderer(orderer);
 
 let ca = new cac();
 let usr = new user('admin');
+
 
 // async function init() {
 //     let store = await hfc.newDefaultKeyValueStore({ path: '/tmp/kvs' });
@@ -32,22 +35,21 @@ let usr = new user('admin');
 
 
 function query() {
-    hfc.newDefaultKeyValueStore({ path: '/tmp/kvs' }).then((store) => {
-        client.setStateStore(store);
-        ca.enroll('admin', 'adminpw').then((r) => {
-            usr.setEnrollment(r.key, r.certificate, 'Org1MSP').then(() => {
-                client.setUserContext(usr);
-                channel.queryInfo(peer).then((rr) => {
-                    console.log(rr);
-                });
+    hfc.newDefaultKeyValueStore({ path: '/tmp/kvs' })
 
-            })
+        .then((store) => {
+            client.setStateStore(store);
+            ca.enroll('beetle', 'alpha')
+                .then((r) => {
+                    usr.setEnrollment(r.key, r.certificate, 'Org1MSP')
+                        .then(() => {
+                            client.setUserContext(usr);
+                            queryfunc(7);
+
+                        })
+                })
         })
-    })
 }
-
-query();
-
 
 
 
@@ -72,25 +74,70 @@ query();
  * various query capabilities
  */
 
-//channel height
-// channel.queryInfo(peer);
+function queryfunc(con) {
+    switch (con) {
+        case 1:
+            //query channel height
+            channel.queryInfo(peer).then((rr) => {
+                console.log(JSON.stringify(rr));
+            });
+            break;
+        case 2:
+            //query block-by-number
+            channel.queryBlock(1, peer).then((rr) => {
+                console.log(JSON.stringify(rr))
+            });
+            break;
+        case 3:
+            //query block-by-hash
+            channel.queryBlockByHash(Buffer.from('9309039e7e980f138c1950f2b4a672e725c17465f82a31773ad98bb5f7135aa8', 'Hex'), peer).then((rr) => {
+                console.log(rr);
+            });
+            break;
+        case 4:
+            //all channels tha a peer is part of
+            client.queryChannels(peer).then((rr) => {
+                console.log(JSON.stringify(rr));
+            });
+            break;
+        case 5:
+            //all installed chaincodes in a peer (not work yeat!)
+            client.queryInstalledChaincodes(peer).then((rr) => {
+                console.log(rr)
+            });
+            break;
+        case 6:
+            //all instantiated chaincodes in a channel (not work yeat!)
+            channel.queryInstantiatedChaincodes(peer).then((rr) => {
+                console.log(rr)
+            });
+            break;
+        case 7:
+            //query transaction-by-id
+            channel.queryTransaction('4f7d58399537881b532c48a94ebc5b8ac77491ab99eb6c6a82760b51023ab72e', peer).then((rr) => {
+                console.log(JSON.stringify(rr))
+            });
+            break;
 
-//block-by-number, block-by-hash
+        case 8:
+            //channel configuration data
+            channel.getChannelConfig().then((rr) => {
+                console.log(rr)
+            });
+            break;
+
+    }
 
 
-//all channels that a peer is part of
 
 
-//all installed chaincodes in a peer
 
 
-//all instantiated chaincodes in a channel
 
 
-//transaction-by-id
+}
 
-
-//channel configuration data
+query()
 
 /**
  * monitoring events

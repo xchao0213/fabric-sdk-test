@@ -20,11 +20,11 @@ var CAClient = class {
     /**
      * register a new user 注册一个用户
      */
-    register(username, password) {
+    register(username, password, role) {
         let req = {
             enrollmentID: username,
             enrollmentSecret: password,
-            role: 'user',
+            role: role,
             affiliation: 'org1.department1'
         };
 
@@ -37,10 +37,10 @@ var CAClient = class {
             // console.log(r);
             admin.setEnrollment(r.key, r.certificate, 'Org1MSP').then(() => {
                 ca.register(req, admin).then((rr) => {
-                    console.debug(rr);
+                    console.info(rr);
                     return rr;
                 }).catch((e) => {
-                    console.debug(e);
+                    console.info(e);
                 })
             })
         })
@@ -49,17 +49,17 @@ var CAClient = class {
     //enroll a user to obtain the enrollment certificate signed by the Fabric CA
     //登记用户，获取签名证书
     enroll(username, password) {
-        return new Promise(function(resolve,reject){
+        return new Promise(function (resolve, reject) {
             ca.enroll({
                 enrollmentID: username,
                 enrollmentSecret: password
             }).then((r) => {
                 return resolve(r);
-            }).catch((e) =>{
+            }).catch((e) => {
                 return reject(e);
             })
         })
-        
+
     }
 
 
